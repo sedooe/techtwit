@@ -1,5 +1,8 @@
 package com.techtwit.demo
 
+import com.techtwit.demo.bot.TechTwitBot
+import com.techtwit.demo.model.TechTwit
+import com.techtwit.demo.repository.TechTwitRepository
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -8,14 +11,19 @@ import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.util.ResourceUtils
+import org.telegram.telegrambots.ApiContextInitializer
+import org.telegram.telegrambots.TelegramBotsApi
 import java.util.*
-
 
 @SpringBootApplication
 class TechTwitApplication {
 
+    init {
+        ApiContextInitializer.init()
+    }
+
     companion object {
-        val logger = LoggerFactory.getLogger(TechTwitApplication::class.java.name)
+        val logger = LoggerFactory.getLogger(TechTwitApplication::class.java.name)!!
     }
 
     @ConditionalOnProperty(name = ["techtwits.import.data"])
@@ -32,6 +40,12 @@ class TechTwitApplication {
                 logger.info("Ignoring the unique key exception...")
             }
         }
+    }
+
+    @Bean
+    fun initBot(techTwitBot: TechTwitBot) = CommandLineRunner {
+        val telegramBotsApi = TelegramBotsApi()
+        telegramBotsApi.registerBot(techTwitBot)
     }
 
     private fun readTechTwitsFromFile(): List<TechTwit> {

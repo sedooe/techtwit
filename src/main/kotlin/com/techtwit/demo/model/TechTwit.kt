@@ -1,4 +1,4 @@
-package com.techtwit.demo
+package com.techtwit.demo.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
