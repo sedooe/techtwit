@@ -2,7 +2,7 @@ package com.techtwit.demo
 
 import com.techtwit.demo.bot.TechTwitBot
 import com.techtwit.demo.model.TechTwit
-import com.techtwit.demo.repository.TechTwitRepository
+import com.techtwit.demo.service.TechTwitService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -28,14 +28,14 @@ class TechTwitApplication {
 
     @ConditionalOnProperty(name = ["techtwits.import.data"])
     @Bean
-    fun importData(repository: TechTwitRepository) = CommandLineRunner {
+    fun importData(techTwitService: TechTwitService) = CommandLineRunner {
         logger.info("Techtwits data importing is enabled...")
 
         readTechTwitsFromFile().forEach {
             logger.info("Saving into database: $it")
 
             try {
-                repository.save(it)
+                techTwitService.save(it)
             } catch (e: DuplicateKeyException) {
                 logger.info("Ignoring the unique key exception...")
             }

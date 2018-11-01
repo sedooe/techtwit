@@ -11,7 +11,7 @@ class TechTwitBot(
         @Value("\${techtwits.bot.token}") private val token: String,
         @Value("\${techtwits.bot.username}") private val botUsername: String,
         private val normalAnswerPreparer: NormalAnswerPreparer,
-        private val repliedAnswerPreparer: RepliedAnswerPreparer) : TelegramLongPollingBot() {
+        private val repliedAnswerPreparer: RepliedAnswerPreparer): TelegramLongPollingBot() {
 
     override fun getBotToken() = token
 

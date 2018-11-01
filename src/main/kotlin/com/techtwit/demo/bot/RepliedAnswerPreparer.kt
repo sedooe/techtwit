@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service
 import org.telegram.telegrambots.api.objects.Message
 
 @Service
-class RepliedAnswerPreparer(private val techTwitService: TechTwitService) : AnswerPreparer(techTwitService) {
+class RepliedAnswerPreparer(private val techTwitService: TechTwitService)
+    : AnswerPreparer(techTwitService) {
 
     companion object {
         const val READ_COMMAND = "/read"
@@ -14,7 +15,7 @@ class RepliedAnswerPreparer(private val techTwitService: TechTwitService) : Answ
 
     override fun getAnswer(message: Message): String {
         if (message.text.startsWith(READ_COMMAND)) {
-            // TODO: mark this source as read for this user
+            techTwitService.seenBy(message.from) // TODO: Event?
             return READ_EMOJI
         }
 
