@@ -15,7 +15,7 @@ class RepliedAnswerPreparer(private val techTwitService: TechTwitService)
 
     override fun getAnswer(message: Message): String {
         if (message.text.startsWith(READ_COMMAND)) {
-            techTwitService.seenBy(message.from) // TODO: Event?
+            techTwitService.seenBy(message.from, message.replyToMessage.text) // TODO: Event?
             return READ_EMOJI
         }
 

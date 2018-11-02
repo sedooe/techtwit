@@ -25,11 +25,7 @@ class NormalAnswerPreparer(val techTwitService: TechTwitService, val subscriberS
                 return START_EMOJI
             }
 
-            messageStartsWith(NEW_SOURCE_COMMAND) -> {
-                val newArticle = techTwitService.getRandomTechTwit()
-                subscriberService.updateLastArticleSent(message.from, newArticle.id) // TODO: Event?
-                return newArticle.source;
-            }
+            messageStartsWith(NEW_SOURCE_COMMAND) -> techTwitService.getRandomTechTwit().source
 
             messageStartsWith(RepliedAnswerPreparer.READ_COMMAND) -> "You need to reply one of my messages to use this command."
 
