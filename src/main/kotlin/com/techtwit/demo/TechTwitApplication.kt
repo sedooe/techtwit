@@ -1,8 +1,8 @@
 package com.techtwit.demo
 
 import com.techtwit.demo.bot.TechTwitBot
-import com.techtwit.demo.model.TechTwit
-import com.techtwit.demo.service.TechTwitService
+import com.techtwit.demo.model.Article
+import com.techtwit.demo.service.ArticleService
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -28,14 +28,14 @@ class TechTwitApplication {
 
     @ConditionalOnProperty(name = ["techtwits.import.data"])
     @Bean
-    fun importData(techTwitService: TechTwitService) = CommandLineRunner {
+    fun importData(articleService: ArticleService) = CommandLineRunner {
         logger.info("Techtwits data importing is enabled...")
 
         readTechTwitsFromFile().forEach {
             logger.info("Saving into database: $it")
 
             try {
-                techTwitService.save(it)
+                articleService.save(it)
             } catch (e: DuplicateKeyException) {
                 logger.info("Ignoring the unique key exception...")
             }
@@ -48,10 +48,10 @@ class TechTwitApplication {
         telegramBotsApi.registerBot(techTwitBot)
     }
 
-    private fun readTechTwitsFromFile(): List<TechTwit> {
+    private fun readTechTwitsFromFile(): List<Article> {
         return ResourceUtils.getFile("classpath:tweets.txt")
                 .useLines { it.toList() }
-                .map { TechTwit(UUID.randomUUID().toString(), it.substringAfter("> ")) }
+                .map { Article(UUID.randomUUID().toString(), it.substringAfter("> ")) }
     }
 }
 

@@ -1,19 +1,19 @@
 package com.techtwit.demo.bot
 
 import com.techtwit.demo.service.SubscriberService
-import com.techtwit.demo.service.TechTwitService
+import com.techtwit.demo.service.ArticleService
 import org.springframework.stereotype.Service
 import org.telegram.telegrambots.api.objects.Message
 
 @Service
-class NormalAnswerPreparer(val techTwitService: TechTwitService, val subscriberService: SubscriberService)
-    : AnswerPreparer(techTwitService) {
+class NormalAnswerPreparer(val articleService: ArticleService, val subscriberService: SubscriberService)
+    : AnswerPreparer(articleService) {
 
     companion object {
         private const val START_COMMAND = "/start"
         private const val NEW_SOURCE_COMMAND = "/new"
 
-        private val START_EMOJI = String(Character.toChars(Integer.parseInt("1F60A", 16))) // smiling face
+        private val startEmoji = String(Character.toChars(Integer.parseInt("1F60A", 16))) // smiling face
     }
 
     override fun getAnswer(message: Message): String {
@@ -22,14 +22,14 @@ class NormalAnswerPreparer(val techTwitService: TechTwitService, val subscriberS
         return when {
             messageStartsWith(START_COMMAND) -> {
                 subscriberService.save(message.from) // TODO: Event?
-                return START_EMOJI
+                return startEmoji
             }
 
-            messageStartsWith(NEW_SOURCE_COMMAND) -> techTwitService.getRandomTechTwit().source
+            messageStartsWith(NEW_SOURCE_COMMAND) -> articleService.getRandomArticle().source
 
             messageStartsWith(RepliedAnswerPreparer.READ_COMMAND) -> "You need to reply one of my messages to use this command."
 
-            else -> DEFAULT_ANSWER
+            else -> defaultAnswer
         }
     }
 }
