@@ -14,6 +14,7 @@ class NormalAnswerPreparer(val articleService: ArticleService, val subscriberSer
         private const val NEW_SOURCE_COMMAND = "/new"
 
         private val startEmoji = String(Character.toChars(Integer.parseInt("1F60A", 16))) // smiling face
+        private val noResourceEmoji = String(Character.toChars(Integer.parseInt("1F61E", 16))) // disappointed face
     }
 
     override fun getAnswer(message: Message): String {
@@ -25,7 +26,14 @@ class NormalAnswerPreparer(val articleService: ArticleService, val subscriberSer
                 return startEmoji
             }
 
-            messageStartsWith(NEW_SOURCE_COMMAND) -> articleService.getRandomArticle().source
+            messageStartsWith(NEW_SOURCE_COMMAND) -> {
+                val article = articleService.getRandomArticleFor(message.from)
+                return if (article == null) {
+                    "Unfortunately, I have no more resource for you at this moment ${noResourceEmoji}"
+                } else {
+                    article.source
+                }
+            }
 
             messageStartsWith(RepliedAnswerPreparer.READ_COMMAND) -> "You need to reply one of my messages to use this command."
 

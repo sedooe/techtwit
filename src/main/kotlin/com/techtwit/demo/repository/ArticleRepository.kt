@@ -3,11 +3,12 @@ package com.techtwit.demo.repository
 import com.techtwit.demo.model.Article
 import org.springframework.data.mongodb.core.FluentMongoOperations
 import org.springframework.data.mongodb.core.MongoOperations
-import org.springframework.data.mongodb.core.aggregation.Aggregation
+import org.springframework.data.mongodb.core.aggregation.Aggregation.*
 import org.springframework.data.mongodb.core.query.Criteria.where
 import org.springframework.data.mongodb.core.query.Query.query
 import org.springframework.data.mongodb.core.query.Update
 import org.springframework.stereotype.Repository
+import org.telegram.telegrambots.api.objects.User
 
 @Repository
 class ArticleRepository(private val mongoOps: MongoOperations, private val fluentMongoOps: FluentMongoOperations) {
@@ -19,12 +20,13 @@ class ArticleRepository(private val mongoOps: MongoOperations, private val fluen
 
     fun save(article: Article) = mongoOps.save(article)
 
-    fun getRandomArticle(): Article { // TODO: do not return anything that seen by the subscriber previously.
-        val matchStage = Aggregation.sample(1)
-        val aggregation = Aggregation.newAggregation(matchStage)
-        val output = mongoOps.aggregate(aggregation, TECH_TWIT_COLLECTION, entityClass)
+    fun getRandomArticleFor(user: User): Article? {
+        val matchOperation = match(where("seenBySubscribers").not().all(user.id))
+        val aggregation = newAggregation(matchOperation, sample(1))
 
-        return output.uniqueMappedResult!!
+        val result = mongoOps.aggregate(aggregation, TECH_TWIT_COLLECTION, entityClass)
+
+        return result.uniqueMappedResult
     }
 
     fun getArticleIdBySource(source: String): String {

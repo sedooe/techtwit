@@ -10,7 +10,7 @@ class ArticleService(private val articleRepository: ArticleRepository) {
 
     fun save(article: Article) = articleRepository.save(article)
 
-    fun getRandomArticle() = articleRepository.getRandomArticle()
+    fun getRandomArticleFor(user: User) = articleRepository.getRandomArticleFor(user)
 
     fun seenBy(user: User, source: String) {
         val articleId = articleRepository.getArticleIdBySource(source)
