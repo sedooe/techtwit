@@ -1,5 +1,5 @@
 # TechTwit
-A telegram bot which sends subscribers technical tweets/articles about software development, JVM, Java, Javascript, Kubernetes and so on.
+A [telegram bot](https://telegram.me/techtwit_bot) which sends subscribers technical tweets/articles about software development, JVM, Java, Javascript, Kubernetes and so on.
 
 ## Commands
 `/start` -> Makes you a subscriber.
