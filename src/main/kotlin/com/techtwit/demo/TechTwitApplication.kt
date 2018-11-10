@@ -4,15 +4,16 @@ import com.techtwit.demo.bot.TechTwitBot
 import com.techtwit.demo.model.Article
 import com.techtwit.demo.service.ArticleService
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.dao.DuplicateKeyException
-import org.springframework.util.ResourceUtils
 import org.telegram.telegrambots.ApiContextInitializer
 import org.telegram.telegrambots.TelegramBotsApi
+import java.io.File
 import java.util.*
 
 @SpringBootApplication
@@ -26,12 +27,13 @@ class TechTwitApplication {
         val logger = LoggerFactory.getLogger(TechTwitApplication::class.java.name)!!
     }
 
-    @ConditionalOnProperty(name = ["techtwits.import.data"])
+    @ConditionalOnProperty(name = ["techtwits.data.import"])
     @Bean
-    fun importData(articleService: ArticleService) = CommandLineRunner {
+    fun importData(articleService: ArticleService,
+                   @Value("\${techtwits.data.resourceFilePath}") resourceFilePath: String) = CommandLineRunner {
         logger.info("Techtwits data importing is enabled...")
 
-        readTechTwitsFromFile().forEach {
+        readTechTwitsFrom(resourceFilePath).forEach {
             logger.info("Saving into database: $it")
 
             try {
@@ -48,8 +50,8 @@ class TechTwitApplication {
         telegramBotsApi.registerBot(techTwitBot)
     }
 
-    private fun readTechTwitsFromFile(): List<Article> {
-        return ResourceUtils.getFile("classpath:tweets.txt")
+    private fun readTechTwitsFrom(resourceFilePath: String): List<Article> {
+        return File(resourceFilePath)
                 .useLines { it.toList() }
                 .map { Article(UUID.randomUUID().toString(), it.substringAfter("> ")) }
     }

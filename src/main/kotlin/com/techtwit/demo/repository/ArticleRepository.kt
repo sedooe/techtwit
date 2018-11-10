@@ -14,7 +14,7 @@ import org.telegram.telegrambots.api.objects.User
 class ArticleRepository(private val mongoOps: MongoOperations, private val fluentMongoOps: FluentMongoOperations) {
 
     companion object {
-        private const val TECH_TWIT_COLLECTION = "techTwit"
+        private const val ARTICLE_COLLECTION = "article"
         private val entityClass = Article::class.java
     }
 
@@ -24,7 +24,7 @@ class ArticleRepository(private val mongoOps: MongoOperations, private val fluen
         val matchOperation = match(where("seenBySubscribers").not().all(user.id))
         val aggregation = newAggregation(matchOperation, sample(1))
 
-        val result = mongoOps.aggregate(aggregation, TECH_TWIT_COLLECTION, entityClass)
+        val result = mongoOps.aggregate(aggregation, ARTICLE_COLLECTION, entityClass)
 
         return result.uniqueMappedResult
     }

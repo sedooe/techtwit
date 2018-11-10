@@ -1,8 +1,0 @@
-spring:
-  data.mongodb.uri: ${MONGODB_URI}
-
-#techtwits.import.data: true
-
-techtwits.bot:
-  token: ${TELEGRAM_BOT_TOKEN}
-  username: techtwit_bot

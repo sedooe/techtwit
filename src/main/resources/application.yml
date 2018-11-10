@@ -1,0 +1,10 @@
+spring:
+  data.mongodb.uri: ${MONGODB_URI}
+
+techtwits.data:
+  import: false
+  resourceFilePath: ${RESOURCE_FILE_PATH}
+
+techtwits.bot:
+  token: ${TELEGRAM_BOT_TOKEN}
+  username: techtwit_bot
