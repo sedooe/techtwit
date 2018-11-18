@@ -40,7 +40,7 @@ class ArticleRepository(private val mongoOps: MongoOperations, private val fluen
     fun readBySubscriber(subscriberId: Int, articleId: String) {
         mongoOps.updateFirst(
                 query(where("id").`is`(articleId)),
-                Update().push("seenBySubscribers", subscriberId),
+                Update().addToSet("seenBySubscribers", subscriberId),
                 entityClass
         )
     }
