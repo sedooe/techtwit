@@ -1,10 +1,14 @@
 spring:
   data.mongodb.uri: ${MONGODB_URI}
 
-techtwits.data:
-  import: false
-  resourceFilePath: ${RESOURCE_FILE_PATH}
+telegram-api:
+  token: ${TELEGRAM_API_TOKEN}
+  set-webhook-url: https://api.telegram.org/bot${telegram-api.token}/setWebhook
 
-techtwits.bot:
-  token: ${TELEGRAM_BOT_TOKEN}
-  username: techtwit_bot
+techtwits:
+  bot:
+    base-url: ${BOT_BASE_URL}
+    webhook-callback-url: ${techtwits.bot.base-url}/webhook/${telegram-api.token}
+  data:
+    import: false
+    resourceFilePath: ${RESOURCE_FILE_PATH}

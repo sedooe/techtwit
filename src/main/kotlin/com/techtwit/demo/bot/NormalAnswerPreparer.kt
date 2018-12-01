@@ -22,7 +22,7 @@ class NormalAnswerPreparer(val articleService: ArticleService, val subscriberSer
 
         return when {
             messageStartsWith(START_COMMAND) -> {
-                subscriberService.save(message.from) // TODO: Event?
+                subscriberService.save(message.from)
                 return """
                     $startEmoji
                     You can see the list of available commands with descriptions by typing `/`.

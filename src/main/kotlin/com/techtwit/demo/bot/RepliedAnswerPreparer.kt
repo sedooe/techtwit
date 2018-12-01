@@ -15,7 +15,7 @@ class RepliedAnswerPreparer(private val articleService: ArticleService)
 
     override fun getAnswer(message: Message): String {
         if (message.text.startsWith(READ_COMMAND)) {
-            articleService.seenBy(message.from, message.replyToMessage.text) // TODO: Event?
+            articleService.seenBy(message.from, message.replyToMessage.text)
             return readEmoji
         }
 
